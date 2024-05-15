@@ -130,7 +130,7 @@ static void SpawnStar(GameCtx* ctx, dmGameSystem::HFactoryComponent factory)
     dmhash_t starid = dmGameObject::ConstructInstanceId(index);
 
     float y = ctx->m_ScreenHeight * (rand() / (float)RAND_MAX);
-    dmVMath::Point3 position(ctx->m_ScreenWidth/2, y, 0.1f);
+    dmVMath::Point3 position(ctx->m_ScreenWidth+32, y, 0.1f);
     dmVMath::Quat rotation(0,0,0,1);
     dmVMath::Vector3 scale(2.0f,2.0f,2.0f);
 
