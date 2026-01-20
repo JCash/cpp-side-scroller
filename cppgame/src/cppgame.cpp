@@ -119,15 +119,7 @@ static void SpawnStar(GameCtx* ctx, dmGameSystem::HFactoryComponent factory)
         return;
     }
 
-    uint32_t index = dmGameObject::AcquireInstanceIndex(ctx->m_LevelCollection);
-    if (index == dmGameObject::INVALID_INSTANCE_POOL_INDEX)
-    {
-        dmLogError("Gameobject buffer is full. See `collection.max_instances` in game.project");
-        ctx->m_HasError = true;
-        return;
-    }
-
-    dmhash_t starid = dmGameObject::ConstructInstanceId(index);
+    dmhash_t starid = dmGameObject::CreateInstanceId();
 
     float y = ctx->m_ScreenHeight * (rand() / (float)RAND_MAX);
     dmVMath::Point3 position(ctx->m_ScreenWidth+32, y, 0.1f);
@@ -136,8 +128,9 @@ static void SpawnStar(GameCtx* ctx, dmGameSystem::HFactoryComponent factory)
 
     dmGameObject::HPropertyContainer properties = 0;
 
-    dmGameObject::HInstance instance = dmGameSystem::CompFactorySpawn(ctx->m_FactoryWorld, factory, ctx->m_LevelCollection,
-                                                            index, starid, position, rotation, scale, properties);
+    dmGameObject::HInstance instance = 0;
+    dmGameObject::Result result = dmGameSystem::CompFactorySpawn(ctx->m_FactoryWorld, factory, ctx->m_LevelCollection,
+                                                                 starid, position, rotation, scale, properties, &instance);
 
     ctx->m_Stars.Push(instance);
 }
@@ -279,6 +272,13 @@ static void InitGame(GameCtx* ctx)
 static void ExitGame(GameCtx* ctx)
 {
     dmLogInfo("ExitGame");
+
+    if (ctx->m_LevelCollection)
+    {
+        dmResource::Release(ctx->m_Factory, ctx->m_LevelCollection);
+        ctx->m_LevelCollection = 0;
+    }
+
     if (ctx->m_MainCollection)
     {
         dmResource::Release(ctx->m_Factory, ctx->m_MainCollection);
