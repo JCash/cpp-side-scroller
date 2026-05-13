@@ -359,11 +359,11 @@ dmExtension::Result Finalize(dmExtension::Params* params)
 
 static void OnEvent(dmExtension::Params* params, const dmExtension::Event* event)
 {
-    if (event->m_Event == dmExtension::EVENT_ID_ENGINE_INITIALIZED)
+    if (event->m_Event == EXTENSION_EVENT_ID_ENGINE_INITIALIZED)
     {
         InitGame(g_Ctx);
     }
-    else if (event->m_Event == dmExtension::EVENT_ID_ENGINE_DELETE)
+    else if (event->m_Event == EXTENSION_EVENT_ID_ENGINE_DELETE)
     {
         ExitGame(g_Ctx);
     }
